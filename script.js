@@ -6,7 +6,7 @@ function player () {
     const updateChoices = (choice) => {
         if ( !choices.includes(choice) && (choice <= 8 && choice > 0 ) ) {
             choices.push(choice);
-            return true
+            return choice
         }
         return false
        };
@@ -27,7 +27,13 @@ function player () {
 const gameBoard = (function () {
     const gameBoard = new Array("","","","","","","","","");
 
-    const updateBoard = (index,playerIcon) => { if (gameBoard[index] !== "" ) gameBoard[index] = playerIcon; }
+    const updateBoard = (index,playerIcon) => { 
+        if ( gameBoard[index] === "" ) {
+            gameBoard[index] = playerIcon;
+            return true
+        }
+        return false;
+    }
 
     const getGameBoard = () => { return gameBoard }
 
@@ -58,7 +64,7 @@ const gameLogic = (function () {
         let askNumber;
         
         while ( typeof askNumber !== "number"){
-            askNumber = parseInt(prompt("Type a number (0-8): "))
+            askNumber = parseInt(prompt("Type a number (0-8): "));
         };        
         
         return askNumber
@@ -96,11 +102,14 @@ while (!gameLogic.isGameOver()){
 
     gameBoard.updateBoard(player1Turn, gameLogic.getPlayer1Icon())
 
+    console.log(gameBoard.getGameBoard())
+
     let player2Turn;
     do {
         player2Turn = gameLogic.updatePlayer2Choices( gameLogic.askPlayerChoice() );
     } while (player2Turn === false);
 
     gameBoard.updateBoard(player2Turn, gameLogic.getPlayer2Icon())
+    console.log(gameBoard.getGameBoard())
     
 }
