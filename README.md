@@ -23,16 +23,21 @@ Create a Tic Tac Toe game with JavaScript CSS and HTML.
 
 **Player**
 
-- Player's name and icon, and lastChoice property.
-- Array with player's valid choices property (1 - 9).
-- Method to set player icon and name.
+- Player's name and icon property.
+- Array with player's valid choices property (must be numbers from 1 - 9).
 - Method to update choices array and prevent duplicates or wrong values.
+- Methods that returns icon, name and choices
 
 **Board**
 
-- Array property with 9 keys representing the board
+- Array property with 9 spaces representing the board
+- Method to prevent playing the same square
+- Method that will update the game board
+
+***controlGameFlow**
 - Add property to indicate player's turn
-- Add property to heck if game is over
+- Add property to check if game is over
+- Method to 
 - Method that checks whether the win or tie conditions are met
   - **Win conditons**
     - (1,2,3)
@@ -42,7 +47,4 @@ Create a Tic Tac Toe game with JavaScript CSS and HTML.
     - (3,5,7)
   - **Tie conditions**
     - All nine spaces are marked no condition above is met by a single player
-- Method that will update the game board with player choices
-- Method to prevent playing the same square
-- Method to start / restart the game
  
