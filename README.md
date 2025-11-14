@@ -37,7 +37,8 @@ Create a Tic Tac Toe game with JavaScript CSS and HTML.
 
 ***controlGameFlow**
 - Add property to check if game is over
-- Method to 
+- Method to ask for player name and icon.
+- Make two player objects and return their methods to update choices and get icons
 - Method that checks whether the win or tie conditions are met
   - **Win conditons**
     - (0,1,2)
