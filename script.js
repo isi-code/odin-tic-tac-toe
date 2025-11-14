@@ -21,7 +21,9 @@ function player () {
 
     const getName = () => { return name };
 
-    return { updateChoices, getPlayerChoices, setIcon, setName, getIcon, getName }
+    const resetChoices = () => { choices.forEach( c => choices.pop(c)) };
+
+    return { updateChoices, getPlayerChoices, setIcon, setName, getIcon, getName, resetChoices }
 }
 
 const gameBoard = (function () {
@@ -47,7 +49,13 @@ const gameBoard = (function () {
         `
     };
 
-    return { updateBoard, getGameBoard, getGameBoardArray}
+    const resetGameBoard = () => {
+        for (let i = 0; i < gameBoard.length; i++) {
+            gameBoard[i] = " ";
+        }
+    }
+
+    return { updateBoard, getGameBoard, getGameBoardArray, resetGameBoard}
 })()
 
 const gameLogic = (function () {
