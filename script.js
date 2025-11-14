@@ -25,17 +25,25 @@ function player () {
 }
 
 const gameBoard = (function () {
-    const gameBoard = new Array("","","","","","","","","");
+    const gameBoard = new Array(" "," "," "," "," "," "," "," "," ");
 
     const updateBoard = (index,playerIcon) => { 
-        if ( gameBoard[index] === "" ) {
+        if ( gameBoard[index] === " " ) {
             gameBoard[index] = playerIcon;
             return true
         }
         return false;
     }
 
-    const getGameBoard = () => { return gameBoard }
+    const getGameBoard = () => { 
+        return`
+ ${gameBoard[0]} | ${gameBoard[1]} | ${gameBoard[2]}
+---+---+---
+ ${gameBoard[3]} | ${gameBoard[4]} | ${gameBoard[5]}
+---+---+---
+ ${gameBoard[6]} | ${gameBoard[7]} | ${gameBoard[8]}
+        `
+    };
 
     return { updateBoard, getGameBoard }
 })()
@@ -73,7 +81,7 @@ const gameLogic = (function () {
     const isGameOver = () => {
         const currentBoardState = gameBoard.getGameBoard();
 
-        if (!currentBoardState.includes("")){
+        if (!currentBoardState.includes(" ")){
             console.log("It's a tie");
             return true
         }
