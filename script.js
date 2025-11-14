@@ -4,7 +4,7 @@ function player () {
     const choices = [];
 
     const updateChoices = (choice) => {
-        if ( !choices.includes(choice) && (choice <= 8 && choice > 0 ) ) {
+        if ( !choices.includes(choice) && (choice <= 8 && choice >= 0 ) ) {
             choices.push(choice);
             return choice
         }
@@ -35,6 +35,8 @@ const gameBoard = (function () {
         return false;
     }
 
+    const getGameBoardArray = () => {return gameBoard}
+
     const getGameBoard = () => { 
         return`
  ${gameBoard[0]} | ${gameBoard[1]} | ${gameBoard[2]}
@@ -45,7 +47,7 @@ const gameBoard = (function () {
         `
     };
 
-    return { updateBoard, getGameBoard }
+    return { updateBoard, getGameBoard, getGameBoardArray}
 })()
 
 const gameLogic = (function () {
@@ -78,19 +80,55 @@ const gameLogic = (function () {
         return askNumber
     };
 
+    const winner = (currentBoardState) =>{
+        const winConditions = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6], [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
+        const p1Icon = player1.getIcon();
+        const p2Icon = player2.getIcon();
+
+        const turnsNumber = player1.getPlayerChoices().length + player2.getPlayerChoices().length 
+        if (turnsNumber >= 5) {
+            const mapWinCon= winConditions.map( winCon => {
+                return winCon.map((idx)=>{
+                    return currentBoardState[idx]
+                })
+            })
+        
+            for (let win of mapWinCon) {
+                const p1IconCount= win.reduce((total, arrValue) => {
+                    if (arrValue === p1Icon) total++
+                    return total
+                }, 0);
+
+                const p2IconCount= win.reduce((total, arrValue) => {
+                    if (arrValue === p2Icon) total++
+                    return total
+                }, 0);
+
+                if (p1IconCount === 3) return true
+                else if (p2IconCount === 3) return true
+            }
+        }
+        return false
+    }
+
     const isGameOver = () => {
-        const currentBoardState = gameBoard.getGameBoard();
+        const currentBoardState = gameBoard.getGameBoardArray();
 
         if (!currentBoardState.includes(" ")){
             console.log("It's a tie");
             return true
         }
+
+        else if (winner(currentBoardState)){
+            return true
+        }
+        
         return false
     };
 
     return { 
         setPlayersInfo, 
-        isGameOver, 
+        isGameOver,
         askPlayerChoice, 
         updatePlayer1Choices, 
         updatePlayer2Choices,
@@ -101,23 +139,28 @@ const gameLogic = (function () {
 
 gameLogic.setPlayersInfo();
 
-while (!gameLogic.isGameOver()){
+let gameOver;
 
-    let player1Turn;    
+while (!gameOver){
+
+    let playerTurn;    
     do {
-        player1Turn = gameLogic.updatePlayer1Choices( gameLogic.askPlayerChoice() );
-    } while (player1Turn === false);
+        playerTurn = gameLogic.updatePlayer1Choices( gameLogic.askPlayerChoice() );
+    } while (playerTurn === false);
 
-    gameBoard.updateBoard(player1Turn, gameLogic.getPlayer1Icon())
+    gameBoard.updateBoard(playerTurn, gameLogic.getPlayer1Icon());
 
-    console.log(gameBoard.getGameBoard())
+    console.log(gameBoard.getGameBoard());
 
-    let player2Turn;
+    gameOver = gameLogic.isGameOver();
+
+    playerTurn = false;
     do {
-        player2Turn = gameLogic.updatePlayer2Choices( gameLogic.askPlayerChoice() );
-    } while (player2Turn === false);
+        playerTurn = gameLogic.updatePlayer2Choices( gameLogic.askPlayerChoice() );
+    } while (playerTurn === false);
 
-    gameBoard.updateBoard(player2Turn, gameLogic.getPlayer2Icon())
-    console.log(gameBoard.getGameBoard())
-    
+    gameBoard.updateBoard(playerTurn, gameLogic.getPlayer2Icon());
+    console.log(gameBoard.getGameBoard());
+
+    gameOver = gameLogic.isGameOver();
 }
