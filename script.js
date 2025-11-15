@@ -88,49 +88,43 @@ const gameLogic = (function () {
         return askNumber
     };
 
-    const winner = (currentBoardState) =>{
+    const winner = (playerName,playerChoices) =>{
         const winConditions = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6], [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
-        const p1Icon = player1.getIcon();
-        const p2Icon = player2.getIcon();
-
-        const turnsNumber = player1.getPlayerChoices().length + player2.getPlayerChoices().length 
-        if (turnsNumber >= 5) {
-            const mapWinCon= winConditions.map( winCon => {
-                return winCon.map((idx)=>{
-                    return currentBoardState[idx]
-                })
-            })
-        
-            for (let win of mapWinCon) {
-                const p1IconCount= win.reduce((total, arrValue) => {
-                    if (arrValue === p1Icon) total++
-                    return total
-                }, 0);
-
-                const p2IconCount= win.reduce((total, arrValue) => {
-                    if (arrValue === p2Icon) total++
-                    return total
-                }, 0);
-
-                if (p1IconCount === 3) return true
-                else if (p2IconCount === 3) return true
+        for (let wcs of winConditions){
+            let count = 0;            
+            for (let idx of wcs){
+                if (playerChoices.includes(idx)) count++;
             }
+            if(count === 3) {
+                console.log(`Player ${playerName} wins`)
+                return true
+            }
+            else count = 0;
         }
         return false
     }
 
     const isGameOver = () => {
         const currentBoardState = gameBoard.getGameBoardArray();
+        const p1Choice = player1.getPlayerChoices();
+        const p2Choice = player2.getPlayerChoices();
+        const turns = p1Choice.length + p2Choice.length
 
         if (!currentBoardState.includes(" ")){
             console.log("It's a tie");
             return true
         }
 
-        else if (winner(currentBoardState)){
-            return true
+        if (turns >= 5){
+            const playerName1 = player1.getName()
+            const playerName2 = player2.getName()
+            if (winner(playerName1, p1Choice)){
+                return true
+            }
+            else if (winner(playerName2, p2Choice)){
+                return true
+            }
         }
-        
         return false
     };
 
@@ -145,10 +139,9 @@ const gameLogic = (function () {
     }
 })()
 
-gameLogic.setPlayersInfo();
-
+gameLogic.setPlayersInfo()
+;
 let gameOver;
-
 while (!gameOver){
 
     let playerTurn;    
@@ -161,6 +154,10 @@ while (!gameOver){
     console.log(gameBoard.getGameBoard());
 
     gameOver = gameLogic.isGameOver();
+
+    if (gameOver) {
+        break; 
+    }
 
     playerTurn = false;
     do {
