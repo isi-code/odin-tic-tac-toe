@@ -1,0 +1,55 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    width: 100%;
+    height: 100vh;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+main > section > .gameboard-container {
+    display: grid;
+    grid-template: repeat(3,1fr) / repeat(3,1fr);
+    width: clamp(350px,60vw,750px);
+    height: clamp(350px,60vw,750px);
+    border: solid 1px black;
+}
+
+.gameboard-container > div {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+.gameboard-container > div:nth-child(4),
+.gameboard-container > div:nth-child(5),
+.gameboard-container > div:nth-child(6){
+    border-top:4px solid black;
+    border-bottom:4px solid black;
+}
+
+.gameboard-container > div:nth-child(2),
+.gameboard-container > div:nth-child(5),
+.gameboard-container > div:nth-child(8){
+    border-right:4px solid black;
+    border-left:4px solid black;
+}
+
+.gameboard-container > .first-player::after {
+    content: "X";
+    color: rgb(67, 125, 211);
+}
+
+.gameboard-container > .second-player::after {
+    content: "O";
+    color: red;
+}
+
+.gameboard-container > .first-player::after,
+.gameboard-container > .second-player::after { font-size: clamp(3rem, 9vw, 30rem); }
