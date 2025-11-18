@@ -6,7 +6,7 @@ function player () {
     const updateChoices = (choice) => {
         if ( !choices.includes(choice) && (choice <= 8 && choice >= 0 ) ) {
             choices.push(choice);
-            return choice
+            return true
         }
         return false
        };
@@ -62,12 +62,6 @@ const gameLogic = (function () {
     const player1 = player();
     const player2 = player();
 
-    const updatePlayer1Choices = player1.updateChoices;
-    const updatePlayer2Choices = player2.updateChoices;
-
-    const getPlayer1Icon = player1.getIcon;
-    const getPlayer2Icon = player2.getIcon;
-
     const setPlayersInfo = (icon1 = "X", icon2 = "O") => {
         let playerName = prompt("Player 1 name:")
         player1.setName(playerName);
@@ -80,11 +74,14 @@ const gameLogic = (function () {
 
     const askPlayerChoice = () => {
         let askNumber;
-        
-        while ( typeof askNumber !== "number"){
+
+        const choices = player1.getPlayerChoices().concat( player2.getPlayerChoices() );
+
+        do {
             askNumber = parseInt(prompt("Type a number (0-8): "));
-        };        
-        
+        }
+        while ( isNaN(askNumber) || askNumber > 8 || askNumber < 0 || choices.includes(askNumber) );
+
         return askNumber
     };
 
@@ -128,44 +125,27 @@ const gameLogic = (function () {
         return false
     };
 
+    const gameMatch = (turn) => {
+        const currentPlayer = (turn % 2 === 0) ? player1 : player2;
+        const playerChoice = askPlayerChoice();
+        currentPlayer.updateChoices(playerChoice);
+        gameBoard.updateBoard(playerChoice, currentPlayer.getIcon());
+        return gameBoard.getGameBoard()
+    }
+
     return { 
         setPlayersInfo, 
         isGameOver,
-        askPlayerChoice, 
-        updatePlayer1Choices, 
-        updatePlayer2Choices,
-        getPlayer1Icon,
-        getPlayer2Icon
+        gameMatch
     }
 })()
 
-gameLogic.setPlayersInfo()
-;
+gameLogic.setPlayersInfo();
+
 let gameOver;
+let turn = 0;
 while (!gameOver){
-
-    let playerTurn;    
-    do {
-        playerTurn = gameLogic.updatePlayer1Choices( gameLogic.askPlayerChoice() );
-    } while (playerTurn === false);
-
-    gameBoard.updateBoard(playerTurn, gameLogic.getPlayer1Icon());
-
-    console.log(gameBoard.getGameBoard());
-
-    gameOver = gameLogic.isGameOver();
-
-    if (gameOver) {
-        break; 
-    }
-
-    playerTurn = false;
-    do {
-        playerTurn = gameLogic.updatePlayer2Choices( gameLogic.askPlayerChoice() );
-    } while (playerTurn === false);
-
-    gameBoard.updateBoard(playerTurn, gameLogic.getPlayer2Icon());
-    console.log(gameBoard.getGameBoard());
-
+    console.log(gameLogic.gameMatch(turn));
+    turn ++;
     gameOver = gameLogic.isGameOver();
 }
