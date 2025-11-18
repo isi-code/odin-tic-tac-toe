@@ -111,7 +111,7 @@ const gameLogic = (function () {
             return true
         }
 
-        if (turn >= 5){
+        if (turn >= 4){
             const playerName1 = player1.getName();
             const playerName2 = player2.getName();
             if (winner(playerName1, p1Choice)){
@@ -132,27 +132,35 @@ const gameLogic = (function () {
         return gameBoard.getGameBoard()
     }
 
+    const resetGame = () => {
+        gameBoard.resetGameBoard();
+        player1.resetChoices();
+        player2.resetChoices();
+    }
+
     return { 
         setPlayersInfo, 
         isGameOver,
-        gameMatch
+        gameMatch,
+        resetGame
     }
 })()
 
-let gameOver;
-let turn = 0;
 let keepPlaying = true;
-
 while (keepPlaying){
     let question = prompt("Do you want to play Tic Tac Toe? (Y/N)");
 
     if (question.toLowerCase() === "y"){
+        let gameOver;
+        let turn = 0;
         gameLogic.setPlayersInfo();
         while (!gameOver){
             console.log(gameLogic.gameMatch(turn));
             turn ++;
             gameOver = gameLogic.isGameOver(turn);
         }
+        gameLogic.resetGame();
+        turn = 0;
     } else {
         keepPlaying = false
     }
