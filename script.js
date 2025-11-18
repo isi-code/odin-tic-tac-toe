@@ -101,20 +101,19 @@ const gameLogic = (function () {
         return false
     }
 
-    const isGameOver = () => {
+    const isGameOver = (turn) => {
         const currentBoardState = gameBoard.getGameBoardArray();
         const p1Choice = player1.getPlayerChoices();
         const p2Choice = player2.getPlayerChoices();
-        const turns = p1Choice.length + p2Choice.length
 
         if (!currentBoardState.includes(" ")){
             console.log("It's a tie");
             return true
         }
 
-        if (turns >= 5){
-            const playerName1 = player1.getName()
-            const playerName2 = player2.getName()
+        if (turn >= 5){
+            const playerName1 = player1.getName();
+            const playerName2 = player2.getName();
             if (winner(playerName1, p1Choice)){
                 return true
             }
@@ -140,12 +139,21 @@ const gameLogic = (function () {
     }
 })()
 
-gameLogic.setPlayersInfo();
-
 let gameOver;
 let turn = 0;
-while (!gameOver){
-    console.log(gameLogic.gameMatch(turn));
-    turn ++;
-    gameOver = gameLogic.isGameOver();
+let keepPlaying = true;
+
+while (keepPlaying){
+    let question = prompt("Do you want to play Tic Tac Toe? (Y/N)");
+
+    if (question.toLowerCase() === "y"){
+        gameLogic.setPlayersInfo();
+        while (!gameOver){
+            console.log(gameLogic.gameMatch(turn));
+            turn ++;
+            gameOver = gameLogic.isGameOver(turn);
+        }
+    } else {
+        keepPlaying = false
+    }
 }
