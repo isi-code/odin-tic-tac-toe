@@ -146,11 +146,21 @@ const gameLogic = (function () {
     }
 })()
 
-let keepPlaying = true;
-while (keepPlaying){
-    let question = prompt("Do you want to play Tic Tac Toe? (Y/N)");
+const board = document.querySelector(".gameboard-container")
+const gameVisuals = (function (board) {
+    const gameboard = board;
+    gameboard.addEventListener("click", (e)=>{
+        if(e.target.className === "square"){
+            console.dir(e);
+        };
+    })
+})(board)
 
-    if (question.toLowerCase() === "y"){
+let keepPlaying = false;
+while (keepPlaying){
+    let question = prompt("Do you want to play Tic Tac Toe? (y/n)");
+
+    if (question === "y"){
         let gameOver;
         let turn = 0;
         gameLogic.setPlayersInfo();
