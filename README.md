@@ -30,17 +30,29 @@ Create a Tic Tac Toe game with JavaScript CSS and HTML.
 - Methods that returns icon, name and choices
 - Method to reset choices
 
-**Board**
+**Board Logic**
 
 - Array property with 9 spaces representing the board
-- Method that will update the game board
-- Method that return current board
-- Method to reset board
+- Method that will update the game board with user names to represent square being occupied
+- Method that returns array
+- Method to reset board values
+
+**Board Display**
+
+- Method to create Tic Tac Toe grid
+- Method to update board values
+- Method to reset Board values
+- Method to remove tic tac toe board 
+- Method to display results
+
 
 ***controlGameFlow**
 - Add property to check if game is over
 - Method to ask for player name and icon.
 - Make two player objects and return their methods to update choices and get icons
+- Method to handle match for each player
+  - Update board when a player clicks the board
+  - Store results in an array
 - Method that checks whether the win or tie conditions are met.
   - This will check if three equal symbols are in the following places:
     - **Win conditons**
