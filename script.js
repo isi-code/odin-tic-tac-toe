@@ -89,7 +89,7 @@ const gameLogic = (function () {
         player2.setIcon(icon2);
     }
 
-    const winner = (playerName,playerChoices) =>{
+    const winner = (playerName, playerChoices) =>{
         const winConditions = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6], [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
         for (let wcs of winConditions){
             let count = 0;            
@@ -107,21 +107,21 @@ const gameLogic = (function () {
 
     const isGameOver = (turn) => {
         const currentBoardState = gameBoardLogic.getGameBoardArray();
-        const p1Choice = player1.getPlayerChoices();
-        const p2Choice = player2.getPlayerChoices();
+        const p1Choices = player1.getPlayerChoices();
+        const p2Choices = player2.getPlayerChoices();
 
         if (!currentBoardState.includes(" ")){
             console.log("It's a tie");
             return true
         }
 
-        if (turn >= 4){
+        if (turn >= 5){
             const playerName1 = player1.getName();
             const playerName2 = player2.getName();
-            if (winner(playerName1, p1Choice)){
+            if (winner(playerName1, p1Choices)){
                 return true
             }
-            else if (winner(playerName2, p2Choice)){
+            else if (winner(playerName2, p2Choices)){
                 return true
             }
         }
@@ -130,7 +130,7 @@ const gameLogic = (function () {
 
     const gameMatch = (turn, square) => {
         const currentPlayer = (turn % 2 === 0) ? player1 : player2;
-        const playerChoice = square.dataset.square;
+        const playerChoice = parseInt(square.dataset.square);
         currentPlayer.updateChoices(playerChoice);
         gameBoardLogic.updateBoard(playerChoice, currentPlayer.getName());
         gameBoardVisuals.updateBoard(square, turn, currentPlayer.getIcon());
@@ -150,17 +150,19 @@ const gameLogic = (function () {
     }
 })()
 
-let keepPlaying = false;
+let gameOver = false;
 let turn = 0;
 gameLogic.setPlayersInfo();
 const gameboard = gameBoardVisuals.createGameboard(document.querySelector('section'));
 
 gameboard.addEventListener("click",(e)=>{
     const square = e.target;
-    if (square.className === "square"){
-        gameLogic.gameMatch(turn, square);
-        turn ++
-        gameOver = gameLogic.isGameOver(turn);        
+    if (!gameOver){
+        if (square.className === "square"){
+            gameLogic.gameMatch(turn, square);
+            turn ++
+            gameOver = gameLogic.isGameOver(turn);        
+        }
     }
 })
             
