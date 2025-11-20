@@ -10,15 +10,26 @@ main {
     justify-items: center;
     width: 100%;
     height: 100vh;
+    gap: 1rem;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    background-color: rgb(188, 229, 243);
 }
 
 main > section > .gameboard {
     display: grid;
     grid-template: repeat(3,1fr) / repeat(3,1fr);
-    width: clamp(350px,60vw,750px);
-    height: clamp(350px,60vw,750px);
-    border: solid 1px black;
+    width: clamp(350px,60vw,600px);
+    height: clamp(350px,60vw,600px);
+    border: solid 0.5px black;
+    background-color: white;
+}
+
+section + button {
+    padding: 1rem;
+    /* border-radius: 30px 30px 20px 20px; */
+    /* border:none; */
+    /* box-shadow: 1px 1px 1px black; */
+    cursor: pointer;
 }
 
 .gameboard > div {
