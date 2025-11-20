@@ -26,12 +26,12 @@ function player () {
     return { updateChoices, getPlayerChoices, setIcon, setName, getIcon, getName, resetChoices }
 }
 
-const gameBoard = (function () {
+const gameBoardLogic = (function () {
     const gameBoard = new Array(" "," "," "," "," "," "," "," "," ");
 
-    const updateBoard = (index,playerIcon) => { 
+    const updateBoard = (index,playerName) => { 
         if ( gameBoard[index] === " " ) {
-            gameBoard[index] = playerIcon;
+            gameBoard[index] = playerName;
             return true
         }
         return false;
@@ -39,23 +39,40 @@ const gameBoard = (function () {
 
     const getGameBoardArray = () => {return gameBoard}
 
-    const getGameBoard = () => { 
-        return`
- ${gameBoard[0]} | ${gameBoard[1]} | ${gameBoard[2]}
----+---+---
- ${gameBoard[3]} | ${gameBoard[4]} | ${gameBoard[5]}
----+---+---
- ${gameBoard[6]} | ${gameBoard[7]} | ${gameBoard[8]}
-        `
-    };
-
     const resetGameBoard = () => {
         for (let i = 0; i < gameBoard.length; i++) {
             gameBoard[i] = " ";
         }
     }
 
-    return { updateBoard, getGameBoard, getGameBoardArray, resetGameBoard}
+    return { updateBoard, getGameBoardArray, resetGameBoard}
+})()
+
+const gameBoardVisuals = (function () {
+    const createGameboard = (container) => {
+        const gameboard = document.createElement("div");
+        gameboard.setAttribute("class", "gameboard");
+        for (let i = 0; i < 9; i++){
+            let square = document.createElement("div");
+            square.setAttribute("class",'square');
+            square.dataset.square = i;
+            gameboard.appendChild(square);
+        }
+        let fontCredit = document.createElement("p");
+        fontCredit.textContent = "Font by MadPixel";
+        container.appendChild(gameboard);
+        container.appendChild(fontCredit);
+
+        return gameboard
+    }
+
+    const updateBoard = (square, turn, icon) => {
+        const playerClass= (turn % 2 === 0) ? "first-player" : "second-player";
+        square.setAttribute("class", playerClass)
+        square.textContent = icon;
+    }
+
+    return { createGameboard, updateBoard }
 })()
 
 const gameLogic = (function () {
@@ -63,27 +80,14 @@ const gameLogic = (function () {
     const player2 = player();
 
     const setPlayersInfo = (icon1 = "X", icon2 = "O") => {
-        let playerName = prompt("Player 1 name:")
+        let playerName = "Clark"
         player1.setName(playerName);
         player1.setIcon(icon1);
 
-        playerName = prompt("Player 2 name:")
+        playerName = "Leo"
         player2.setName(playerName);
         player2.setIcon(icon2);
     }
-
-    const askPlayerChoice = () => {
-        let askNumber;
-
-        const choices = player1.getPlayerChoices().concat( player2.getPlayerChoices() );
-
-        do {
-            askNumber = parseInt(prompt("Type a number (0-8): "));
-        }
-        while ( isNaN(askNumber) || askNumber > 8 || askNumber < 0 || choices.includes(askNumber) );
-
-        return askNumber
-    };
 
     const winner = (playerName,playerChoices) =>{
         const winConditions = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 4, 8], [2, 4, 6], [0, 3, 6], [1, 4, 7], [2, 5, 8] ]
@@ -102,7 +106,7 @@ const gameLogic = (function () {
     }
 
     const isGameOver = (turn) => {
-        const currentBoardState = gameBoard.getGameBoardArray();
+        const currentBoardState = gameBoardLogic.getGameBoardArray();
         const p1Choice = player1.getPlayerChoices();
         const p2Choice = player2.getPlayerChoices();
 
@@ -124,12 +128,12 @@ const gameLogic = (function () {
         return false
     };
 
-    const gameMatch = (turn) => {
+    const gameMatch = (turn, square) => {
         const currentPlayer = (turn % 2 === 0) ? player1 : player2;
-        const playerChoice = askPlayerChoice();
+        const playerChoice = square.dataset.square;
         currentPlayer.updateChoices(playerChoice);
-        gameBoard.updateBoard(playerChoice, currentPlayer.getIcon());
-        return gameBoard.getGameBoard()
+        gameBoardLogic.updateBoard(playerChoice, currentPlayer.getName());
+        gameBoardVisuals.updateBoard(square, turn, currentPlayer.getIcon());
     }
 
     const resetGame = () => {
@@ -146,32 +150,17 @@ const gameLogic = (function () {
     }
 })()
 
-const board = document.querySelector(".gameboard-container")
-const gameVisuals = (function (board) {
-    const gameboard = board;
-    gameboard.addEventListener("click", (e)=>{
-        if(e.target.className === "square"){
-            console.dir(e);
-        };
-    })
-})(board)
-
 let keepPlaying = false;
-while (keepPlaying){
-    let question = prompt("Do you want to play Tic Tac Toe? (y/n)");
+let turn = 0;
+gameLogic.setPlayersInfo();
+const gameboard = gameBoardVisuals.createGameboard(document.querySelector('section'));
 
-    if (question === "y"){
-        let gameOver;
-        let turn = 0;
-        gameLogic.setPlayersInfo();
-        while (!gameOver){
-            console.log(gameLogic.gameMatch(turn));
-            turn ++;
-            gameOver = gameLogic.isGameOver(turn);
-        }
-        gameLogic.resetGame();
-        turn = 0;
-    } else {
-        keepPlaying = false
+gameboard.addEventListener("click",(e)=>{
+    const square = e.target;
+    if (square.className === "square"){
+        gameLogic.gameMatch(turn, square);
+        turn ++
+        gameOver = gameLogic.isGameOver(turn);        
     }
-}
+})
+            

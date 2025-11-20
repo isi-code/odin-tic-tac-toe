@@ -41,13 +41,13 @@ main > section > .gameboard {
     border-left:4px solid black;
 }
 
-.gameboard > .first-player::after {
+.gameboard > .first-player {
     color: rgb(67, 125, 211);
 }
 
-.gameboard > .second-player::after {
+.gameboard > .second-player {
     color: red;
 }
 
-.gameboard > .first-player::after,
-.gameboard > .second-player::after { font-size: clamp(3rem, 9vw, 30rem); }
+.gameboard > .first-player,
+.gameboard > .second-player{ font-size: clamp(3rem, 9vw, 30rem); }
