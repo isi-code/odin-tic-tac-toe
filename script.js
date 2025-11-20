@@ -45,7 +45,7 @@ const gameBoardLogic = (function () {
         }
     }
 
-    return { updateBoard, getGameBoardArray, resetGameBoard}
+    return { updateBoard, getGameBoardArray, resetGameBoard }
 })()
 
 const gameBoardVisuals = (function () {
@@ -72,7 +72,16 @@ const gameBoardVisuals = (function () {
         square.textContent = icon;
     }
 
-    return { createGameboard, updateBoard }
+    const resetGameBoard = (board) => {
+        const squares = board.childNodes;
+        console.log(squares);
+        squares.forEach((square)=>{
+            square.className = "square";
+            square.textContent = "";
+        })
+    }
+
+    return { createGameboard, updateBoard, resetGameBoard }
 })()
 
 const gameLogic = (function () {
@@ -136,8 +145,8 @@ const gameLogic = (function () {
         gameBoardVisuals.updateBoard(square, turn, currentPlayer.getIcon());
     }
 
-    const resetGame = () => {
-        gameBoard.resetGameBoard();
+    const resetGame = (board) => {
+        gameBoardVisuals.resetGameBoard(board);
         player1.resetChoices();
         player2.resetChoices();
     }
@@ -154,15 +163,23 @@ let gameOver = false;
 let turn = 0;
 gameLogic.setPlayersInfo();
 const gameboard = gameBoardVisuals.createGameboard(document.querySelector('section'));
-
 gameboard.addEventListener("click",(e)=>{
     const square = e.target;
     if (!gameOver){
         if (square.className === "square"){
             gameLogic.gameMatch(turn, square);
             turn ++
-            gameOver = gameLogic.isGameOver(turn);        
+            gameOver = gameLogic.isGameOver(turn);
+            if (gameOver){
+                setTimeout(()=>{
+                let q = prompt("Do you want to keep playing Tic Tac Toe? (Y/N)");
+                if (q === "y" || q === "Y") {
+                    gameLogic.resetGame(gameboard);
+                    turn = 0;
+                    gameOver = false;
+                }},1000)
+            }
         }
     }
-})
+});
             
