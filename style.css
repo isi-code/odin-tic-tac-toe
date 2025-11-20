@@ -25,6 +25,7 @@ main > section > .gameboard {
     display: grid;
     justify-content: center;
     align-content: center;
+    cursor: pointer;
 }
 
 .gameboard > div:nth-child(4),

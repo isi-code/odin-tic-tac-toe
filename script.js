@@ -89,11 +89,18 @@ const gameLogic = (function () {
     const player2 = player();
 
     const setPlayersInfo = (icon1 = "X", icon2 = "O") => {
-        let playerName = "Clark"
+        let playerName;
+        do {
+            playerName = prompt("Player 1 name:");
+
+        } while (playerName === "");
+
         player1.setName(playerName);
         player1.setIcon(icon1);
+        do {
+            playerName = prompt("Player 2 name:");
 
-        playerName = "Leo"
+        } while (playerName === "");
         player2.setName(playerName);
         player2.setIcon(icon2);
     }
@@ -177,7 +184,7 @@ gameboard.addEventListener("click",(e)=>{
                     gameLogic.resetGame(gameboard);
                     turn = 0;
                     gameOver = false;
-                }},1000)
+                }},500)
             }
         }
     }
