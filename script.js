@@ -4,6 +4,7 @@ function player () {
     const choices = [];
 
     const updateChoices = (choice) => {
+        /* Update Choices array*/
         if ( !choices.includes(choice) && (choice <= 8 && choice >= 0 ) ) {
             choices.push(choice);
             return true
@@ -140,21 +141,10 @@ const gameLogic = (function () {
         return false
     }
 
-    const isGameOver = (turn) => {
+    const isGameOver = (turn, playerName, playerChoices) => {
         const currentBoardState = gameBoardLogic.getGameBoardArray();
-        const p1Choices = player1.getPlayerChoices();
-        const p2Choices = player2.getPlayerChoices();
 
-        if (turn >= 5){
-            const playerName1 = player1.getName();
-            const playerName2 = player2.getName();
-            if (winner(playerName1, p1Choices)){
-                return true
-            }
-            else if (winner(playerName2, p2Choices)){
-                return true
-            }
-        }
+        if (turn >= 5) return winner(playerName, playerChoices);
 
         if (!currentBoardState.includes(" ")){
             console.log("It's a tie");
@@ -166,14 +156,22 @@ const gameLogic = (function () {
 
     const gameMatch = (turn, square) => {
         const currentPlayer = (turn % 2 === 0) ? player1 : player2;
+        const playerName = currentPlayer.getName();
+        const playerIcon = currentPlayer.getIcon();
+
         const playerChoice = parseInt(square.dataset.square);
         currentPlayer.updateChoices(playerChoice);
-        gameBoardLogic.updateBoard(playerChoice, currentPlayer.getName());
-        gameBoardVisuals.updateBoard(square, turn, currentPlayer.getIcon());
+
+        gameBoardLogic.updateBoard(playerChoice, playerName );
+        gameBoardVisuals.updateBoard(square, turn, playerIcon);
+
+        const playerChoices = currentPlayer.getPlayerChoices();
+        return gameLogic.isGameOver(turn, playerName, playerChoices);
     }
 
     const resetGame = (board) => {
         gameBoardVisuals.resetGameBoard(board);
+        gameBoardLogic.resetGameBoard();
         player1.resetChoices();
         player2.resetChoices();
     }
@@ -213,9 +211,8 @@ container.addEventListener("click", (e) => {
     
     if (!gameOver){
         if (square.className === "square"){
-            gameLogic.gameMatch(turn, square);
             turn ++
-            gameOver = gameLogic.isGameOver(turn);
+            gameOver = gameLogic.gameMatch(turn, square);
             if (gameOver) {
             setTimeout(()=>{
             let q = prompt("Do you want to keep playing Tic Tac Toe? (Y/N)");
@@ -228,6 +225,6 @@ container.addEventListener("click", (e) => {
                 gameLogic.resetGame(gameboard);
                 gameBoardVisuals.removeBoard(container);
         }},1000)
-        }}
+    }}
     }
 });
