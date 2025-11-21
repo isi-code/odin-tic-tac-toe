@@ -143,7 +143,7 @@ const gameLogic = (function () {
 
     const isGameOver = (turn, playerName, playerChoices) => {
         const winnerResult = winner(playerName, playerChoices);
-        if (!winnerResult && turn >= 9){
+        if (!winnerResult && turn >= 8){
             alert("It's a tie");
             return true
         }
@@ -220,11 +220,7 @@ container.addEventListener("click", (e) => {
                     gameLogic.resetGame(gameboard);
                     turn = 0;
                     gameOver = false;
-                } else {
-                    gameBoardVisuals.removeBoard(container);
-                    gameLogic.showScore(container);
-                    gameLogic.resetGame(gameboard);
-            }},1000)
+                }},1000)
         }}
     }
 });
