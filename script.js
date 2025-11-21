@@ -30,9 +30,9 @@ function player () {
 const gameBoardLogic = (function () {
     const gameBoard = new Array(" "," "," "," "," "," "," "," "," ");
 
-    const updateBoard = (index,playerName) => { 
+    const updateBoard = (index,playerIcon) => { 
         if ( gameBoard[index] === " " ) {
-            gameBoard[index] = playerName;
+            gameBoard[index] = playerIcon;
             return true
         }
         return false;
@@ -132,7 +132,7 @@ const gameLogic = (function () {
                 if (playerChoices.includes(idx)) count++;
             }
             if(count === 3) {
-                console.log(`Player ${playerName} wins`)
+                alert(`Player ${playerName} wins`)
                 playerScore[playerName] += 1;
                 return true
             }
@@ -142,14 +142,13 @@ const gameLogic = (function () {
     }
 
     const isGameOver = (turn, playerName, playerChoices) => {
-        const currentBoardState = gameBoardLogic.getGameBoardArray();
-
-        if (turn >= 5) return winner(playerName, playerChoices);
-
-        if (!currentBoardState.includes(" ")){
-            console.log("It's a tie");
+        const winnerResult = winner(playerName, playerChoices);
+        if (!winnerResult && turn >= 9){
+            alert("It's a tie");
             return true
         }
+
+        if (turn >= 4) return winnerResult
 
         return false
     };
@@ -162,7 +161,7 @@ const gameLogic = (function () {
         const playerChoice = parseInt(square.dataset.square);
         currentPlayer.updateChoices(playerChoice);
 
-        gameBoardLogic.updateBoard(playerChoice, playerName );
+        gameBoardLogic.updateBoard(playerChoice, playerIcon );
         gameBoardVisuals.updateBoard(square, turn, playerIcon);
 
         const playerChoices = currentPlayer.getPlayerChoices();
@@ -211,20 +210,21 @@ container.addEventListener("click", (e) => {
     
     if (!gameOver){
         if (square.className === "square"){
-            turn ++
             gameOver = gameLogic.gameMatch(turn, square);
+            turn ++
             if (gameOver) {
-            setTimeout(()=>{
-            let q = prompt("Do you want to keep playing Tic Tac Toe? (Y/N)");
-            if (q === "y" || q === "Y") {
-                gameLogic.resetGame(gameboard);
-                turn = 0;
-                gameOver = false;
                 gameLogic.showScore(container);
-            } else {
-                gameLogic.resetGame(gameboard);
-                gameBoardVisuals.removeBoard(container);
-        }},1000)
-    }}
+                setTimeout(()=>{
+                let q = prompt("Do you want to keep playing Tic Tac Toe? (Y/N)");
+                if (q === "y" || q === "Y") {
+                    gameLogic.resetGame(gameboard);
+                    turn = 0;
+                    gameOver = false;
+                } else {
+                    gameBoardVisuals.removeBoard(container);
+                    gameLogic.showScore(container);
+                    gameLogic.resetGame(gameboard);
+            }},1000)
+        }}
     }
 });
