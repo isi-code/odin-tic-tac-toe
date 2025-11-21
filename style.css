@@ -2,6 +2,12 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+@font-face {
+    font-family: Minecrafter sans-serif;
+    src: url('Minecrafter.Reg.ttf');
 }
 
 main {
@@ -11,7 +17,6 @@ main {
     width: 100%;
     height: 100vh;
     gap: 1rem;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     background-color: rgb(188, 229, 243);
 }
 
@@ -35,7 +40,6 @@ main > section > .gameboard {
     line-height: 2rem;
 }
 
-
 section ~ button {
     padding: 1rem;
     /* border-radius: 30px 30px 20px 20px; */
@@ -50,6 +54,8 @@ section ~ button {
     align-items: center;
     cursor: pointer;
 }
+
+section p { font-family: Minecrafter sans-serif;}
 
 .gameboard > div:nth-child(4),
 .gameboard > div:nth-child(5),
@@ -74,4 +80,7 @@ section ~ button {
 }
 
 .gameboard > .first-player,
-.gameboard > .second-player{ font-size: clamp(3rem, 9vw, 30rem); }
+.gameboard > .second-player{ 
+    font-family: Minecrafter sans-serif;
+    font-size: clamp(3rem, 5vw, 8rem); 
+}
