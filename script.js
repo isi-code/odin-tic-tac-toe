@@ -185,6 +185,13 @@ playRestartBtn.addEventListener("click",() => {
         gameboard = gameBoardVisuals.createGameboard(container);
         gameOver = false;
     }
+    else if (gameboard){
+        gameLogic.resetGame(gameboard); 
+        gameBoardVisuals.removeBoard(container);
+        gameboard = gameBoardVisuals.createGameboard(container);
+        gameOver = false;
+    }
+    
     let turn = 0;
     gameLogic.setPlayersInfo();
     gameboard.addEventListener("click",(e)=>{
