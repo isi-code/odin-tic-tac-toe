@@ -21,7 +21,7 @@ function player () {
 
     const getName = () => { return name };
 
-    const resetChoices = () => { choices.forEach( c => choices.pop(c)) };
+    const resetChoices = () => { choices.length = 0 };
 
     return { updateChoices, getPlayerChoices, setIcon, setName, getIcon, getName, resetChoices }
 }
@@ -145,11 +145,6 @@ const gameLogic = (function () {
         const p1Choices = player1.getPlayerChoices();
         const p2Choices = player2.getPlayerChoices();
 
-        if (!currentBoardState.includes(" ")){
-            console.log("It's a tie");
-            return true
-        }
-
         if (turn >= 5){
             const playerName1 = player1.getName();
             const playerName2 = player2.getName();
@@ -160,6 +155,12 @@ const gameLogic = (function () {
                 return true
             }
         }
+
+        if (!currentBoardState.includes(" ")){
+            console.log("It's a tie");
+            return true
+        }
+
         return false
     };
 
@@ -177,7 +178,7 @@ const gameLogic = (function () {
         player2.resetChoices();
     }
 
-    const showScore = () => {
+    const showScore = (container) => {
         gameBoardVisuals.createScoreDisplay(container,player1.getName(),player2.getName(),playerScore);
     }                
 
@@ -192,24 +193,22 @@ const gameLogic = (function () {
 
 const playRestartBtn= document.querySelector("button");
 const container = document.querySelector('section');
-let gameboard;
-let gameOver;
+let turn = 0;
+let gameboard = null;
+let gameOver = false;
 
 playRestartBtn.addEventListener("click", () => {
-    if (!gameboard) {
-        gameboard = gameBoardVisuals.createGameboard(container);
-        gameOver = false;
-    }
-    else if (gameboard){
+    if (gameboard) {
         gameLogic.resetGame(gameboard); 
         gameBoardVisuals.removeBoard(container);
-        gameboard = gameBoardVisuals.createGameboard(container,);
-        gameOver = false;
     }
-    
-    let turn = 0;
+    gameOver = false;
+    turn = 0;
+    gameboard = gameBoardVisuals.createGameboard(container);
     gameLogic.setPlayersInfo();
-    gameboard.addEventListener("click",(e)=>{
+});
+
+container.addEventListener("click", (e) => {
     const square = e.target;
     
     if (!gameOver){
@@ -228,7 +227,7 @@ playRestartBtn.addEventListener("click", () => {
             } else {
                 gameLogic.resetGame(gameboard);
                 gameBoardVisuals.removeBoard(container);
-        }},500)
+        }},1000)
         }}
-    }})
+    }
 });
