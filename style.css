@@ -24,7 +24,19 @@ main > section > .gameboard {
     background-color: white;
 }
 
-section + button {
+.displayScore { 
+    background-color: white;
+    text-align: center;
+    padding:1rem;
+    margin: 1rem 0rem;
+}
+
+.displayScore p {
+    line-height: 2rem;
+}
+
+
+section ~ button {
     padding: 1rem;
     /* border-radius: 30px 30px 20px 20px; */
     /* border:none; */
@@ -33,9 +45,9 @@ section + button {
 }
 
 .gameboard > div {
-    display: grid;
+    display: flex;
     justify-content: center;
-    align-content: center;
+    align-items: center;
     cursor: pointer;
 }
 

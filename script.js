@@ -66,6 +66,13 @@ const gameBoardVisuals = (function () {
         return gameboard
     }
 
+    const createScoreDisplay = (container, playerName1, playerName2,playerScore) =>{
+        const displayScore = document.createElement("div");
+        displayScore.setAttribute("class","displayScore");
+        displayScore.innerHTML = `<p><b>Score:</b> <br> <span><b>${playerName1}</b>: ${playerScore[playerName1]}  - - -  <b>${playerName2}</b>: ${playerScore[playerName2]}</span></p>`;
+        container.appendChild(displayScore);
+    }
+
     const updateBoard = (square, turn, icon) => {
         const playerClass= (turn % 2 === 0) ? "first-player" : "second-player";
         square.setAttribute("class", playerClass)
@@ -90,12 +97,13 @@ const gameBoardVisuals = (function () {
     //     })
     }
 
-    return { createGameboard, updateBoard, resetGameBoard, removeBoard }
+    return { createGameboard, updateBoard, resetGameBoard, removeBoard, createScoreDisplay }
 })()
 
 const gameLogic = (function () {
     const player1 = player();
-    const player2 = player();
+    const player2 = player();    
+    const playerScore = {};
 
     const setPlayersInfo = (icon1 = "X", icon2 = "O") => {
         let playerName;
@@ -112,6 +120,8 @@ const gameLogic = (function () {
         } while (playerName === "");
         player2.setName(playerName);
         player2.setIcon(icon2);
+        playerScore[player1.getName()] = 0;
+        playerScore[player2.getName()] = 0;
     }
 
     const winner = (playerName, playerChoices) =>{
@@ -123,6 +133,7 @@ const gameLogic = (function () {
             }
             if(count === 3) {
                 console.log(`Player ${playerName} wins`)
+                playerScore[playerName] += 1;
                 return true
             }
             else count = 0;
@@ -167,10 +178,15 @@ const gameLogic = (function () {
         player2.resetChoices();
     }
 
+    const showScore = () => {
+        gameBoardVisuals.createScoreDisplay(container,player1.getName(),player2.getName(),playerScore);
+    }                
+
     return { 
         setPlayersInfo, 
         isGameOver,
         gameMatch,
+        showScore,
         resetGame
     }
 })()
@@ -180,7 +196,7 @@ const container = document.querySelector('section');
 let gameboard;
 let gameOver;
 
-playRestartBtn.addEventListener("click",() => {
+playRestartBtn.addEventListener("click", () => {
     if (!gameboard) {
         gameboard = gameBoardVisuals.createGameboard(container);
         gameOver = false;
@@ -188,7 +204,7 @@ playRestartBtn.addEventListener("click",() => {
     else if (gameboard){
         gameLogic.resetGame(gameboard); 
         gameBoardVisuals.removeBoard(container);
-        gameboard = gameBoardVisuals.createGameboard(container);
+        gameboard = gameBoardVisuals.createGameboard(container,);
         gameOver = false;
     }
     
@@ -209,6 +225,7 @@ playRestartBtn.addEventListener("click",() => {
                 gameLogic.resetGame(gameboard);
                 turn = 0;
                 gameOver = false;
+                gameLogic.showScore(container);
             } else {
                 gameLogic.resetGame(gameboard);
                 gameBoardVisuals.removeBoard(container);
