@@ -66,9 +66,12 @@ const gameBoardVisuals = (function () {
         return gameboard
     }
 
-    const createScoreDisplay = (container, playerName1, playerName2,playerScore) =>{
-        const displayScore = document.createElement("div");
-        displayScore.setAttribute("class","displayScore");
+    const createScoreDisplay = (container, playerName1, playerName2, playerScore) =>{
+        let displayScore = document.querySelector(".displayScore");
+        if (!displayScore) {
+            displayScore = document.createElement("div");
+            displayScore.setAttribute("class","displayScore");
+        }
         displayScore.innerHTML = `<p><b>Score:</b> <br> <span><b>${playerName1}</b>: ${playerScore[playerName1]}  - - -  <b>${playerName2}</b>: ${playerScore[playerName2]}</span></p>`;
         container.appendChild(displayScore);
     }
@@ -91,10 +94,6 @@ const gameBoardVisuals = (function () {
         while (container.firstChild){
             container.removeChild(container.firstChild)
         }
-    //    const elements = container.childNodes;
-    //     elements.forEach((element)=>{
-    //         element.remove()
-    //     })
     }
 
     return { createGameboard, updateBoard, resetGameBoard, removeBoard, createScoreDisplay }
