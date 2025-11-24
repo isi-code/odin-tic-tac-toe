@@ -173,6 +173,9 @@ const gameLogic = (function () {
         gameBoardLogic.resetGameBoard();
         player1.resetChoices();
         player2.resetChoices();
+        for (let i in playerScore){
+            delete playerScore[i];
+        }
     }
 
     const showScore = (container) => {
